@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using AutoBogus
 @rendermode InteractiveServer
 
 @inject ICsireCommunicationQuery mCsireCommunicationQuery
@@ -12,7 +13,7 @@
 
 <ErrorBoundary>
     <ChildContent>
-        <FluentDataGrid TGridItem="CsireRequest" Items="@mCsireRequests" ShowHover="true" ResizableColumns="true" @ref="mFluentDataGrid">
+        <FluentDataGrid TGridItem="CsireRequest" Items="@mCsireRequests" ShowHover="true" ResizableColumns="true" @ref="mFluentDataGrid" AutoFit="true">
 
             <SelectColumn TGridItem="CsireRequest"
                           SelectMode="DataGridSelectMode.Single"
@@ -20,21 +21,21 @@
                           Property="@(e => e.Id == mSelectedCsireRequest?.Id)"
                           OnSelect="@(e => Select(e.Item, e.Selected))" />
 
-            <PropertyColumn Property="@(p => p.Id)" Width="0.5fr" />
-            <PropertyColumn Property="@(p => p.ProcessNumber)" Width="0.5fr" />
-            <PropertyColumn Property="@(p => p.Description)" Tooltip="true" Width="2fr" />
+            <PropertyColumn Property="@(p => p.Id)" Width="0.5fr" Sortable="true" />
+            <PropertyColumn Property="@(p => p.ProcessNumber)" Width="0.5fr" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Description)" Tooltip="true" Width="2fr" Sortable="true" />
             <PropertyColumn Property="@(p => p.CreatedOnUtc)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.CreatedBy)" />
-            <PropertyColumn Property="@(p => p.Status)" />
+            <PropertyColumn Property="@(p => p.CreatedBy)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Status)" Sortable="true" />
 
-            <PropertyColumn Property="@(p => p.MessageId)" Tooltip="true" />
-            <PropertyColumn Property="@(p => p.Message)" Tooltip="true" />
-            <PropertyColumn Property="@(p => p.SentOnUtc)" />
+            <PropertyColumn Property="@(p => p.MessageId)" Tooltip="true" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Message)" Tooltip="true" Sortable="true" />
+            <PropertyColumn Property="@(p => p.SentOnUtc)" Sortable="true" />
 
-            <PropertyColumn Property="@(p => p.ResultSuccess)" />
-            <PropertyColumn Property="@(p => p.ResultCode)" />
-            <PropertyColumn Property="@(p => p.ResultDescription)" />
-            <PropertyColumn Property="@(p => p.AnsweredOnUtc)" />
+            <PropertyColumn Property="@(p => p.ResultSuccess)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.ResultCode)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.ResultDescription)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.AnsweredOnUtc)" Sortable="true" />
 
         </FluentDataGrid>
     </ChildContent>
@@ -54,6 +55,9 @@
 
     protected override void OnInitialized()
     {
+        // List<CsireRequest> requests = AutoFaker.Generate<CsireRequest>(10);
+        // mCsireRequests = requests.AsQueryable();
+
         mCsireRequests = mCsireCommunicationQuery.GetRequests();
     }
 
@@ -64,6 +68,8 @@
 
         if (aSelected)
             mSelectedCsireRequest = aCsireRequest;
+        else
+            mSelectedCsireRequest = null;
     }
 
 
