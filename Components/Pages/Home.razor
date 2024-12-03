@@ -9,6 +9,10 @@
         Refresh
     </FluentButton>
 
+    <FluentButton Appearance="Appearance.Accent" OnClick="Generate">
+        Generate
+    </FluentButton>
+
 </div>
 
 <ErrorBoundary>
@@ -32,7 +36,6 @@
             <PropertyColumn Property="@(p => p.Message)" Tooltip="true" Sortable="true" />
             <PropertyColumn Property="@(p => p.SentOnUtc)" Sortable="true" />
 
-            <PropertyColumn Property="@(p => p.ResultSuccess)" Sortable="true" />
             <PropertyColumn Property="@(p => p.ResultCode)" Sortable="true" />
             <PropertyColumn Property="@(p => p.ResultDescription)" Sortable="true" />
             <PropertyColumn Property="@(p => p.AnsweredOnUtc)" Sortable="true" />
@@ -55,8 +58,8 @@
 
     protected override void OnInitialized()
     {
-        // List<CsireRequest> requests = AutoFaker.Generate<CsireRequest>(10);
-        // mCsireRequests = requests.AsQueryable();
+        //List<CsireRequest> requests = AutoFaker.Generate<CsireRequest>(10);
+        //mCsireRequests = requests.AsQueryable();
 
         mCsireRequests = mCsireCommunicationQuery.GetRequests();
     }
@@ -79,5 +82,16 @@
             return;
 
         await mFluentDataGrid.RefreshDataAsync();
+    }
+
+
+    async Task Generate()
+    {
+        List<CsireRequest> requests = AutoFaker.Generate<CsireRequest>(10);
+        foreach (var request in requests)
+            request.Id = 0;
+
+        await mCsireCommunicationQuery.Insert(requests);
+        await Refresh();
     }
 }

@@ -12,12 +12,16 @@ builder.Services.AddFluentUIComponents();
 builder.Services.AddDataGridEntityFrameworkAdapter();
 
 
+//builder.Services.AddDbContextFactory<CsireContext>(options => options
+//    .UseSqlite("Data Source=csire.db", o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+//    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
 string csireModelConnectionString = builder.Configuration.GetValue<string>("ConnectionString") ?? "";
 
 builder.Services.AddDbContextFactory<CsireContext>(options => options
     .UseSqlServer(csireModelConnectionString, o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+
 
 builder.Services.AddTransient<ICsireCommunicationQuery, CsireCommunicationQuery>();
 
@@ -27,7 +31,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -37,6 +40,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var csireContext = services.GetRequiredService<CsireContext>();
+    //csireContext.Database.EnsureDeleted();
     csireContext.Database.EnsureCreated();
 }
 

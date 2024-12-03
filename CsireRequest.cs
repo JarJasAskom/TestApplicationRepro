@@ -28,8 +28,6 @@ public class CsireRequest
     public string? ResultDescription { get; set; }
     public DateTime? AnsweredOnUtc { get; set; }
 
-    public bool? ResultSuccess => ResultCode?.StartsWith("CA");
-
     public string? AcknowledgedBy { get; set; }
     public DateTime? AcknowledgedOn { get; set; }
 

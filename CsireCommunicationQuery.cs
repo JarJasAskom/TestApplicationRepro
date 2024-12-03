@@ -17,7 +17,6 @@ public class CsireCommunicationQuery : ICsireCommunicationQuery
     }
 
 
-
     public void Dispose()
     {
         mCsireContext.Dispose();
@@ -30,5 +29,12 @@ public class CsireCommunicationQuery : ICsireCommunicationQuery
             .TagWith("Test")
             .AsNoTracking();
             return queryable;
+    }
+
+
+    public async Task Insert(List<CsireRequest> aRequests)
+    {
+        mCsireContext.Requests.AddRange(aRequests);
+        await mCsireContext.SaveChangesAsync();
     }
 }
