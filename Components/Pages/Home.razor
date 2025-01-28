@@ -58,16 +58,16 @@
 
     protected override void OnInitialized()
     {
-        //List<CsireRequest> requests = AutoFaker.Generate<CsireRequest>(10);
-        //mCsireRequests = requests.AsQueryable();
-
         mCsireRequests = mCsireCommunicationQuery.GetRequests();
+
+        // uncommnent and DataGrid starts correctly select item
+        // mCsireRequests = mCsireRequests.ToList().AsQueryable();
     }
 
 
     void Select(CsireRequest aCsireRequest, bool aSelected)
     {
-        //Console.WriteLine($"Select  {aCsireRequest.Id}, Selected: {aSelected}");
+        Console.WriteLine($"Select  {aCsireRequest.Id}, Selected: {aSelected}");
 
         if (aSelected)
             mSelectedCsireRequest = aCsireRequest;
