@@ -1,0 +1,27 @@
+﻿@page "/ManualGrid"
+@using AutoBogus
+@rendermode InteractiveServer
+
+@inject ICsireCommunicationQuery mCsireCommunicationQuery
+
+<div>
+    <FluentDataGrid GenerateHeader=GenerateHeaderOption.None GridTemplateColumns="1fr 2fr" TGridItem="string" MultiLine="true">
+        @foreach (var row in mNamePlateRows)
+        {
+            <FluentDataGridRow>
+                <FluentDataGridCell GridColumn=1>@row.Label</FluentDataGridCell>
+                <FluentDataGridCell GridColumn=2>@row.Text</FluentDataGridCell>
+            </FluentDataGridRow>
+        }
+    </FluentDataGrid>
+</div>
+
+@code {
+    record NamePlateRow(string Label, string Text);
+    List<NamePlateRow> mNamePlateRows = [];
+
+    protected override void OnInitialized()
+    {
+        mNamePlateRows = AutoFaker.Generate<NamePlateRow>(5);
+    }
+}
