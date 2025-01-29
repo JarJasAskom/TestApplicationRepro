@@ -20,10 +20,10 @@
         <FluentDataGrid TGridItem="CsireRequest" Items="@mCsireRequests" ShowHover="true" ResizableColumns="true" @ref="mFluentDataGrid">
 
             <SelectColumn TGridItem="CsireRequest"
-                          SelectMode="DataGridSelectMode.Single"
-                          SelectFromEntireRow="true"
-                          Property="@(e => e.Id == mSelectedCsireRequest?.Id)"
-                          OnSelect="@(e => Select(e.Item, e.Selected))" />
+            SelectMode="DataGridSelectMode.SingleSticky"
+            SelectFromEntireRow="true"
+            Property="@(e => IsSelected(e))"
+            OnSelect="@(e => Select(e.Item, e.Selected))" />
 
             <PropertyColumn Property="@(p => p.Id)" Width="0.5fr" Sortable="true" />
             <PropertyColumn Property="@(p => p.ProcessNumber)" Width="0.5fr" Sortable="true" />
@@ -53,7 +53,8 @@
 @code {
     FluentDataGrid<CsireRequest>? mFluentDataGrid;
     IQueryable<CsireRequest> mCsireRequests = new List<CsireRequest>().AsQueryable();
-    CsireRequest? mSelectedCsireRequest;
+
+    Dictionary<int, bool> mSelected = [];
 
 
     protected override void OnInitialized()
@@ -64,15 +65,32 @@
         // mCsireRequests = mCsireRequests.ToList().AsQueryable();
     }
 
+    protected override void OnParametersSet()
+    {
+    }
+
+
+    bool IsSelected(CsireRequest aCsireRequest)
+    {
+        if (mSelected.TryGetValue(aCsireRequest.Id, out bool selected))
+            return selected;
+
+        return false;
+    }
+
 
     void Select(CsireRequest aCsireRequest, bool aSelected)
     {
-        Console.WriteLine($"Select  {aCsireRequest.Id}, Selected: {aSelected}");
+        Console.WriteLine($"{DateTime.Now} Select  {aCsireRequest.Id}, Selected: {aSelected}");
 
-        if (aSelected)
-            mSelectedCsireRequest = aCsireRequest;
+        if (mSelected.TryGetValue(aCsireRequest.Id, out bool selected))
+        {
+            mSelected[aCsireRequest.Id] = aSelected;
+        }
         else
-            mSelectedCsireRequest = null;
+        {
+            mSelected.Add(aCsireRequest.Id, aSelected);
+        }
     }
 
 
